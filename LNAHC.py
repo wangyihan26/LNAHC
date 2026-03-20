@@ -142,7 +142,7 @@ def train_hyper(args):
     if torch.cuda.is_available(): torch.cuda.synchronize()
     start_time = time.time()
 
-    Structure = RandomWalkPriorLearner(steps=args.rw_steps, alpha=args.alpha_appnp, beta=args.beta).to(device)
+    Structure = RandomWalkPriorLearner(steps=args.rw_steps, alpha=args.alpha, beta=args.beta).to(device)
     Structure.compute_static_prior(x, H_incidence, n_clusters)
     A_target, Z_target, svd_dim = Structure()
 
@@ -179,10 +179,10 @@ def train_hyper(args):
         loss_kl = F.kl_div(S.log(), Q_target, reduction='batchmean')
 
 
-        loss = args.gamma_ncut * loss_c + \
-               args.gamma_balance * loss_balance + \
-               args.gamma_rec * loss_rec + \
-               args.kl * loss_kl
+        loss = args.ncut * loss_c + \
+               args.balance * loss_balance + \
+               args.gamma_nrec * loss_rec + \
+               args.gamma_crec * loss_kl
 
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=2.0)

@@ -4,13 +4,13 @@ cocitation/cora:
   lr: 0.001
   epochs: 500
   rw_steps: 4
-  alpha_appnp: 0.3
+  alpha: 0.3
   beta: 0.5
   weight_decay: 0.0005
-  gamma_ncut: 3.0
-  gamma_balance: 1.0
-  gamma_rec: 1.7
-  kl: 0.5
+  ncut: 3.0
+  balance: 1.0
+  gamma_nrec: 1.7
+  gamma_crec: 0.5
 
 cocitation/citeseer:
   hidden: 512
@@ -18,13 +18,13 @@ cocitation/citeseer:
   lr: 0.0001
   epochs: 600
   rw_steps: 2
-  alpha_appnp: 0.5
+  alpha: 0.5
   beta: 0.2
   weight_decay: 5e-4
-  gamma_ncut: 5.5
-  gamma_balance: 0.5
-  gamma_rec: 0.2
-  kl: 0.2
+  ncut: 5.5
+  balance: 0.5
+  gamma_nrec: 0.2
+  gamma_crec: 0.2
 
 cocitation/pubmed:
   hidden: 516
@@ -32,13 +32,13 @@ cocitation/pubmed:
   lr: 0.001
   epochs: 300
   rw_steps: 4
-  alpha_appnp: 0.3
+  alpha: 0.3
   beta: 0.3
   weight_decay: 5e-4
-  gamma_ncut: 4.0
-  gamma_balance: 0.2
-  gamma_rec: 2.0
-  kl: 0.5
+  ncut: 4.0
+  balance: 0.2
+  gamma_nrec: 2.0
+  gamma_crec: 0.5
 
 coauthorship/cora:
   hidden: 512
@@ -46,13 +46,13 @@ coauthorship/cora:
   lr: 0.001
   epochs: 200
   rw_steps: 2
-  alpha_appnp: 0.4
+  alpha: 0.4
   beta: 0.3
   weight_decay: 5e-4
-  gamma_ncut: 2.0
-  gamma_balance: 0.5
-  gamma_rec: 1.3
-  kl: 0.5
+  ncut: 2.0
+  balance: 0.5
+  gamma_nrec: 1.3
+  gamma_crec: 0.5
 
 coauthorship/dblp:
   hidden: 512
@@ -60,13 +60,13 @@ coauthorship/dblp:
   lr: 0.001
   epochs: 200
   rw_steps: 3
-  alpha_appnp: 0.5
+  alpha: 0.5
   beta: 0.4
   weight_decay: 5e-4
-  gamma_ncut: 5.0
-  gamma_balance: 0.8
-  gamma_rec: 0.5
-  kl: 0.2
+  ncut: 5.0
+  balance: 0.8
+  gamma_nrec: 0.5
+  gamma_crec: 0.2
 
 zoo:
   hidden: 512
@@ -74,13 +74,13 @@ zoo:
   lr: 0.0001
   epochs: 200
   rw_steps: 1
-  alpha_appnp: 0.4
+  alpha: 0.4
   beta: 0.1
   weight_decay: 5e-4
-  gamma_ncut: 1.5
-  gamma_balance: 0.3
-  gamma_rec: 0.2
-  kl: 1.5
+  ncut: 1.5
+  balance: 0.3
+  gamma_nrec: 0.2
+  gamma_crec: 1.5
 
 20newsW100:
   hidden: 512
@@ -88,13 +88,13 @@ zoo:
   lr: 0.001
   epochs: 70
   rw_steps: 2
-  alpha_appnp: 0.2
+  alpha: 0.2
   beta: 0.5
   weight_decay: 5e-4
-  gamma_ncut: 0.5
-  gamma_balance: 0.1
-  gamma_rec: 0.2
-  kl: 0.2
+  ncut: 0.5
+  balance: 0.1
+  gamma_nrec: 0.2
+  gamma_crec: 0.2
 
 Mushroom:
   hidden: 516
@@ -102,13 +102,13 @@ Mushroom:
   lr: 0.001
   epochs: 200
   rw_steps: 2
-  alpha_appnp: 0.3
+  alpha: 0.3
   beta: 0.3
   weight_decay: 5e-4
-  gamma_ncut: 0.5
-  gamma_balance: 0.2
-  gamma_rec: 1.0
-  kl: 0.2
+  ncut: 0.5
+  balance: 0.2
+  gamma_nrec: 1.0
+  gamma_crec: 0.2
 
 NTU2012:
   hidden: 512
@@ -116,13 +116,13 @@ NTU2012:
   lr: 0.001
   epochs: 200
   rw_steps: 3
-  alpha_appnp: 0.3
+  alpha: 0.3
   beta: 0.2
   weight_decay: 5e-4
-  gamma_ncut: 1.0
-  gamma_balance: 0.2
-  gamma_rec: 0.5
-  kl: 0.2
+  ncut: 1.0
+  balance: 0.2
+  gamma_nrec: 0.5
+  gamma_crec: 0.2
 
 ModelNet40:
   hidden: 512
@@ -130,10 +130,10 @@ ModelNet40:
   lr: 0.001
   epochs: 200
   rw_steps: 2
-  alpha_appnp: 0.4
+  alpha: 0.4
   beta: 0.5
   weight_decay: 5e-4
-  gamma_ncut: 5.0
-  gamma_balance: 0.4
-  gamma_rec: 0.3
-  kl: 0.1
+  ncut: 5.0
+  balance: 0.4
+  gamma_nrec: 0.3
+  gamma_crec: 0.1
