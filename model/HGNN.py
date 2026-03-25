@@ -46,12 +46,6 @@ class HGNN(nn.Module):
         self.cluster_projection_head = nn.Linear(n_hid, self.svd_dim)
         self.cluster_output = nn.Linear(self.svd_dim, num_clusters)
 
-        self.contrast_head = nn.Sequential(
-            nn.Linear(n_hid, n_hid),
-            nn.ReLU(inplace=True),
-            nn.Linear(n_hid, n_hid)
-        )
-
         self.decoder = nn.Linear(n_hid, in_ch)
 
     def forward(self, x, H, dv_inv_sqrt, de_inv):
@@ -73,9 +67,8 @@ class HGNN(nn.Module):
         final_emb = self.cluster_projection_head(x_hidden)
         logits = self.cluster_output(final_emb)
 
-        z_contrast = self.contrast_head(x_hidden)
 
         x_rec = self.decoder(x_hidden)
         x_rec = F.normalize(x_rec, p=2, dim=1)
 
-        return logits, final_emb, x_rec, z_contrast
+        return logits, final_emb, x_rec

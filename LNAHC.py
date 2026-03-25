@@ -9,9 +9,6 @@ import random
 import os
 import time
 import torch
-import scipy
-import sklearn
-import numpy
 import argparse
 import yaml
 
@@ -48,7 +45,7 @@ def cluster_metrics(y_true, y_pred):
     return acc, f1, nmi, ari
 
 
-def dmon_regularization(probs):
+def balance_regularization(probs):
     n_nodes = probs.shape[0]
     n_clusters = probs.shape[1]
     c_t_c = torch.matmul(probs.t(), probs)
@@ -58,7 +55,7 @@ def dmon_regularization(probs):
     return loss
 
 
-def compute_honorcut_losses_refined(S, Pi_prior, d_pi_stable):
+def compute_HNCut_loss(S, Pi_prior, d_pi_stable):
     device = S.device
     num_clusters = S.shape[1]
 
@@ -78,32 +75,6 @@ def compute_honorcut_losses_refined(S, Pi_prior, d_pi_stable):
 def target_distribution(q):
     weight = q ** 2 / q.sum(0)
     return (weight.t() / weight.sum(1)).t()
-
-
-def contrastive_loss(emb, adj, batch_size, tau=0.5):
-    device = emb.device
-    num_nodes = emb.shape[0]
-    if num_nodes > batch_size:
-        batch_idx = torch.randperm(num_nodes)[:batch_size].to(device)
-    else:
-        batch_idx = torch.arange(num_nodes).to(device)
-
-    emb = F.normalize(emb, p=2, dim=1)
-    anchor_emb = emb[batch_idx]
-    sim_mat = torch.mm(anchor_emb, emb.t())
-    sim_mat = torch.div(sim_mat, tau)
-    adj_batch = torch.index_select(adj, 0, batch_idx)
-    pos_mask = adj_batch.to_dense() > 0
-    pos_mask = pos_mask.float()
-    exp_sim = torch.exp(sim_mat)
-    sum_exp = exp_sim.sum(dim=1, keepdim=True)
-    log_prob = sim_mat - torch.log(sum_exp + 1e-12)
-    has_pos = pos_mask.sum(1) > 0
-    if has_pos.sum() == 0:
-        return torch.tensor(0.0, device=device, requires_grad=True)
-    loss = - (log_prob * pos_mask).sum(dim=1)
-    loss = loss[has_pos].mean()
-    return loss
 
 
 def train_hyper(args):
@@ -164,7 +135,7 @@ def train_hyper(args):
         model.train()
         optimizer.zero_grad()
 
-        logits, final_emb, x_rec, z_contrast = model(x, H_incidence, dv_inv_sqrt, de_inv)
+        logits, final_emb, x_rec = model(x, H_incidence, dv_inv_sqrt, de_inv)
 
         curr_temp = max(0.1, 1.0 * (0.995 ** epoch))
         S = F.softmax(logits / curr_temp, dim=1)
@@ -173,16 +144,16 @@ def train_hyper(args):
             with torch.no_grad():
                 Q_target = target_distribution(S)
 
-        loss_c = compute_honorcut_losses_refined(S, A_target, d_pi_stable)
-        loss_balance = dmon_regularization(S)
-        loss_rec = 1.0 - F.cosine_similarity(x_rec, x_norm, dim=1).mean()
-        loss_kl = F.kl_div(S.log(), Q_target, reduction='batchmean')
+        loss_c = compute_HNCut_loss(S, A_target, d_pi_stable)
+        loss_balance = balance_regularization(S)
+        loss_nrec = 1.0 - F.cosine_similarity(x_rec, x_norm, dim=1).mean()
+        loss_crec = F.kl_div(S.log(), Q_target, reduction='batchmean')
 
 
         loss = args.ncut * loss_c + \
                args.balance * loss_balance + \
-               args.gamma_nrec * loss_rec + \
-               args.gamma_crec * loss_kl
+               args.gamma_nrec * loss_nrec + \
+               args.gamma_crec * loss_crec
 
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=2.0)

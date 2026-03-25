@@ -4,6 +4,8 @@
 
 In this paper, we propose LNAHC (Lightweight Neural Attributed Hypergraph Clustering) , a lightweight, end-to-end neural framework for attributed hypergraph clustering. Its main idea is to seamlessly unify representation learning and clustering optimization , and specifically, it introduces an attribute-aware hypergraph random walk strategy to construct a structure-attribute proximity matrix that preserves both local topology and multi-hop global semantic relationships. Together with a novel differentiable attributed hypergraph normalized cut (AHNCut) module that directly optimizes a relaxed cut-like loss, these components enable LNAHC to regularize the embedding space and produce high-quality clusters without relying on computationally intensive contrastive learning, heavy attention mechanisms, or decoupled post-processing steps. Our extensive experiments using 9 state-of-the-art baselines across 7 real-world datasets demonstrate the effectiveness and efficiency of LNAHC, showing that it consistently achieves superior clustering performance while maintaining a highly lightweight architecture.
 
+![framework](framework.png)
+
 Code: code is available under the root folder.<br/>
 Data: data is available under the folder dataset/.<br/>
 
@@ -92,6 +94,6 @@ To easily reproduce the results presented in our paper, please use the following
 
 Sample output of LNAHC, on Co-citation Cora dataset:
 ```
-Final Epoch | ACC: 0.7253 | NMI: 0.5652 | F1: 0.6930 | ARI: 0.5031
+Final Epoch | ACC: 0.7253 | NMI: 0.5658 | F1: 0.6930 | ARI: 0.5031
 Effective Time: 13.79s
 ```
